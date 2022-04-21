@@ -1,21 +1,21 @@
 # ==============================     importing modules     ==============================
 
-from asyncio.events import new_event_loop
-from asyncio.windows_events import SelectorEventLoop
+# from asyncio.events import new_event_loop
+# from asyncio.windows_events import SelectorEventLoop
 from discord.utils import get
 import discord, asyncio, io, colorama, random
 from discord import FFmpegPCMAudio
 import time, requests, nekos, sys, os, config
 from discord.ext.commands import cooldown, BucketType
-from discord.ext.commands.converter import MessageConverter
+# from discord.ext.commands.converter import MessageConverter
 from discord.embeds import Embed
 from youtube_dl import YoutubeDL
 import random
 from discord.ext import commands
-from colorama import Fore, Back, Style
+from colorama import Fore, Back, Style 
 from discord.ext.commands import has_permissions, CheckFailure
 from config import *
-from datetime import datetime
+# from datetime import datetime
 from colorama import init
 import aiohttp
 import urllib.request,urllib.parse,urllib.error
@@ -54,10 +54,10 @@ async def on_ready():
     #                                                         What's in the canister?
     #                                                         PlanetSide 2
     #                                                         Rainbow Six Siege
-    #                                                         
+    #                                                         Ready or Not
     #                                                         Victory is our tradition
     #                                                         Tactical Superiority
-    #                                                         Medic Bag Simulator 
+    #                                                         I like Cacao, she's cute
     #                                                         Soap trusted you
     #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="TR Fails Epicly"))
     #                                                                                                The Echoes of Vanu
@@ -68,7 +68,9 @@ async def on_ready():
     #                                                                                                Violet Evergarden
     #                                                                                                Kiss x Sis
     #                                                                                                Rainbow Derp: Siege
+    #                                                                                                The Rise of Wrel
     #                                                                                                Skyfall on Auraxis
+    #                                                                                                
     #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Rave or Riot"))
     #                                                                                                "Delet This Nahui"
     #                                                                                                "Rave or Riot"
@@ -78,14 +80,17 @@ async def on_ready():
     #                                                                                                "XI - Aragami"
     #                                                                                                "World Fragments II"
     #                                                                                                "Murka (Refix 2018)"
-    await client.change_presence(activity=discord.Streaming(name="No Russian speedrun", url="https://www.twitch.tv/guavxx"))
+    await client.change_presence(activity=discord.Streaming(name="I ate the artillery", url="https://www.twitch.tv/guavxx"))
     #                                                            "Terrans Never Falter"  "https://www.youtube.com/watch?v=ffyJFPhjBIE"
     #                                                            "InfantrySide is pain"  "https://www.twitch.tv/guavxx"
     #                                                            "Look, Orbital Strikes"
+    #                                                            "I ate the artillery"
     #                                                            "Buff the T7 Chaingun"
     #                                                            "Mogu Mogu"
     #                                                            "Who can? Kapkan!"
     #                                                            "No Russian speedrun"
+    #                                                            "They're in the attic"
+    #
 
 
 @client.event
@@ -679,6 +684,20 @@ async def custom(ctx, user: discord.Member = None, *args):
         print("Custom DM sent.")
 
 
+@client.command()
+async def findav(ctx, user: discord.Member = None):
+    if user is None:
+        await ctx.send("Mention a user or specify their ID.")
+    else:
+        pfp = user.avatar_url
+        embed = discord.Embed(title = f"Retrieving avatar for {str(user)}", url = f"{pfp}", colour = PrePrep.colRan())
+        embed.set_image(url = f"{pfp}")
+        embed.set_footer(text=f"Pleasant evening, {str(ctx.message.author)}")
+        await ctx.send(embed=embed)
+
+
+
+
 # ==============================     humour commands     ==============================
 
 
@@ -687,10 +706,11 @@ async def trivt(ctx, id = None):
     wrongList = [
         "Nein, incorrect.",
         "No, no no.",
-        "Erroneous answer identified.",
-        "A spurious answer, unfortunately.",
+        "Wrong answer identified.",
+        "Not the right answer, unfortunately.",
         "Nyet, no bueno.",
         "Wrong option mate.",
+        "Err, no, that's incorrect.",
     ]
     rightList = [
         "That is indeed the answer.",
@@ -698,6 +718,17 @@ async def trivt(ctx, id = None):
         "Smartass.",
         "Well, that's correct.",
         "You're right, though it feels like you guessed.",
+        "Usually I'd say you're incorrect, but this time, you're correct.",
+        "Yep, that's right.",
+    ]
+    afkList = [
+        "do reply next time.",
+        "were you AFK?",
+        "how rude of you to ignore me. I have feelings too, you know?",
+        "too busy reading the question?",
+        "did you not know the answer and pretend to run out of time? Lame.",
+        "are you still there? Either way,",
+        "you're gonna have to answer on time.",
     ]
     user = ctx.author.mention
     newDict = list(PrePrep.trivt_list.keys())
@@ -740,7 +771,7 @@ async def trivt(ctx, id = None):
             await ctx.send(f"{random.choice(wrongList)} The correct answer was` {ansformat} `.")
             print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Incorrect. ")
     except asyncio.TimeoutError:
-        await ctx.send(f"{user}, do reply next time.")
+        await ctx.send(f"Hey {user}, {random.choice(afkList)} The answer was` {ansformat} `.")
         print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Did not answer. ")
         return
 
