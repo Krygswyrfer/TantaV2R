@@ -2,6 +2,7 @@
 
 # from asyncio.events import new_event_loop
 # from asyncio.windows_events import SelectorEventLoop
+from cgitb import text
 from discord.utils import get
 import discord, asyncio, io, colorama, random
 from discord import FFmpegPCMAudio
@@ -46,51 +47,10 @@ def check_queue(ctx, id):
 @client.event
 async def on_ready():
     print("Tanta is operational. Have at it.")
-    
-    #await client.change_presence(activity=discord.Game(name="Tactical Superiority"))
-    #                                                         Call of Duty®: WWII
-    #                                                         Hell awaits you
-    #                                                         NEKOPARA Vol. 3
-    #                                                         What's in the canister?
-    #                                                         PlanetSide 2
-    #                                                         Rainbow Six Siege
-    #                                                         Ready or Not
-    #                                                         Victory is our tradition
-    #                                                         Tactical Superiority
-    #                                                         I like Cacao, she's cute
-    #                                                         Soap trusted you
-    #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="TR Fails Epicly"))
-    #                                                                                                The Echoes of Vanu
-    #                                                                                                Operation Lifeline
-    #                                                                                                The Idolm@ster
-    #                                                                                                Expelled From Paradise
-    #                                                                                                Your Lie in April
-    #                                                                                                Violet Evergarden
-    #                                                                                                Kiss x Sis
-    #                                                                                                Rainbow Derp: Siege
-    #                                                                                                The Rise of Wrel
-    #                                                                                                Skyfall on Auraxis
-    #                                                                                                
-    #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Rave or Riot"))
-    #                                                                                                "Delet This Nahui"
-    #                                                                                                "Rave or Riot"
-    #                                                                                                "ナナイロ EveryDay"
-    #                                                                                                "Ange Du Blanc Pur"
-    #                                                                                                "Davay - Critikal"
-    #                                                                                                "XI - Aragami"
-    #                                                                                                "World Fragments II"
-    #                                                                                                "Murka (Refix 2018)"
-    await client.change_presence(activity=discord.Streaming(name="I ate the artillery", url="https://www.twitch.tv/guavxx"))
-    #                                                            "Terrans Never Falter"  "https://www.youtube.com/watch?v=ffyJFPhjBIE"
-    #                                                            "InfantrySide is pain"  "https://www.twitch.tv/guavxx"
-    #                                                            "Look, Orbital Strikes"
-    #                                                            "I ate the artillery"
-    #                                                            "Buff the T7 Chaingun"
-    #                                                            "Mogu Mogu"
-    #                                                            "Who can? Kapkan!"
-    #                                                            "No Russian speedrun"
-    #                                                            "They're in the attic"
-    #
+    #await client.change_presence(activity=discord.Game(name=random.choice(PrePrep.playingList)))
+    #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(PrePrep.watchingList)))
+    #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(PrePrep.listeningList)))
+    await client.change_presence(activity=discord.Streaming(name=random.choice(PrePrep.streamingList), url="https://www.twitch.tv/guavxx")) # "https://www.youtube.com/w
 
 
 @client.event
@@ -373,14 +333,14 @@ may not know.", colour = PrePrep.colRan())
 
     elif specifier.lower() == "trivt":
         embed = discord.Embed(title = "tn? trivt [question id]", description = "Request a random trivia question to answer \
-   within 14 seconds. Questions are heavily based on developer interests. Entering a number will display the question \
+within 14 seconds. Questions are heavily based on developer interests. Entering a number will display the question \
 with that specific ID, if it exists.", colour = PrePrep.colRan())
         embed.set_footer(text = "Arguments in [square brackets] are optional. Arguments in <angular brackets> are required.")
 
     #       =====   Interaction help   =====
 
     elif specifier.lower() == "baka":
-        embed = discord.Embed(title = "tn? baka <user>", description = "Show someone how big of a fool they are not not knowing \
+        embed = discord.Embed(title = "tn? baka <user>", description = "Show someone how big of a fool they are for not knowing \
 about your 70 alternative accounts.", colour = PrePrep.colRan())
         embed.set_footer(text = "Arguments in [square brackets] are optional. Arguments in <angular brackets> are required.")
 
@@ -528,7 +488,7 @@ anime. Sigh...", colour = PrePrep.colRan())
         embed.set_footer(text = "Arguments in [square brackets] are optional. Arguments in <angular brackets> are required.")
 
     elif specifier.lower() == "wallpaper":
-        embed = discord.Embed(title = "tn? wallpaper", description = "Very self-explanatory. Comes in both 4:3 and 16:9 \
+        embed = discord.Embed(title = "tn? wallpaper", description = "Very self-explanatory. Comes in both 4:3 and 9:16 \
 screen ratios for computers and mobile phones, respectively.", colour = PrePrep.colRan())
         embed.set_footer(text = "Arguments in [square brackets] are optional. Arguments in <angular brackets> are required.")
 
@@ -562,8 +522,7 @@ description.", colour = PrePrep.colRan())
         embed.set_footer(text = "Arguments in [square brackets] are optional. Arguments in <angular brackets> are required.")
 
     elif specifier.lower() == "kemonomimi":
-        embed = discord.Embed(title = "tn? kemonomimi", description = "Mmmm. This has my official seal of approvement. \
-Don't ask, just run the command.", colour = PrePrep.colRan())
+        embed = discord.Embed(title = "tn? kemonomimi", description = "Approved by TR High Command. This is a pleasant one.", colour = PrePrep.colRan())
         embed.set_footer(text = "Arguments in [square brackets] are optional. Arguments in <angular brackets> are required.")
 
     elif specifier.lower() == "kuni":
@@ -724,10 +683,10 @@ async def trivt(ctx, id = None):
     afkList = [
         "do reply next time.",
         "were you AFK?",
-        "how rude of you to ignore me. I have feelings too, you know?",
+        "how rude of you to ignore me.",
         "too busy reading the question?",
-        "did you not know the answer and pretend to run out of time? Lame.",
-        "are you still there? Either way,",
+        "did you pretend to run out of time?",
+        "are you still there?",
         "you're gonna have to answer on time.",
     ]
     user = ctx.author.mention
@@ -768,10 +727,10 @@ async def trivt(ctx, id = None):
             await ctx.send(random.choice(rightList))
             print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Correct. ")
         else:
-            await ctx.send(f"{random.choice(wrongList)} The correct answer was` {ansformat} `.")
+            await ctx.send(f"{random.choice(wrongList)} The correct answer was `{ansformat}`.")
             print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Incorrect. ")
     except asyncio.TimeoutError:
-        await ctx.send(f"Hey {user}, {random.choice(afkList)} The answer was` {ansformat} `.")
+        await ctx.send(f"Hey {user}, {random.choice(afkList)} The answer was `{ansformat}`.")
         print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Did not answer. ")
         return
 
@@ -1434,7 +1393,7 @@ async def morenekogif(ctx):
     nekopic = requests.get("https://purrbot.site/api/img/sfw/neko/gif")
     if nekopic.status_code == 200:
         gif = (nekopic.json()["link"])
-        embed = discord.Embed(title = "Here, have a neko", image = f"{gif}", colour = PrePrep.colRan())
+        embed = discord.Embed(description = "Have a neko", image = f"{gif}", colour = PrePrep.colRan())
         embed.set_image(url = gif)
         await ctx.send(embed = embed)
     else:
@@ -1451,7 +1410,7 @@ async def moreneko(ctx):
     if toggle != 3:
         if nekopic.status_code == 200:
             image = (nekopic.json()["url"])
-            embed = discord.Embed(title = "Here, have a neko", image = f"{image}", colour = PrePrep.colRan())
+            embed = discord.Embed(description = "Have a neko", image = f"{image}", colour = PrePrep.colRan())
             embed.set_image(url = image)
             await ctx.send(embed = embed)
         else: 
@@ -1969,7 +1928,7 @@ async def queuepeak(ctx,*, reason=None):
  # image fetch style commands
 @client.command()
 async def neko(ctx):
-    await imgfetchfuncs(ctx, "neko", "Have a neko", "")
+    await imgfetchfuncs(ctx, "neko", "", "Have a neko")
 
 @client.command()
 async def smug(ctx):
@@ -1989,8 +1948,7 @@ async def imgfetchfuncs(ctx, img_endpoint, title, description):
     embed.set_image(url=img)
 
     await ctx.send(embed=embed)
-    print(
-        Fore.WHITE + "[" + Fore.MAGENTA + '+' + Fore.WHITE + "]" + Fore.MAGENTA + f"{ctx.author.name} executed command {conf_bot_prefix}{img_endpoint} result: {img}   time:{round(client.latency * 1000)}ms")
+    print(f"{ctx.author.name} executed command {conf_bot_prefix}{img_endpoint} result: {img}   time:{round(client.latency * 1000)}ms")
 
 async def nsfwimgfetchfuncs(ctx,img_endpoint,title,description):
     r = random.randint(0, 255)
@@ -2006,8 +1964,7 @@ async def nsfwimgfetchfuncs(ctx,img_endpoint,title,description):
     embed.set_image(url=img)
 
     await ctx.send(embed=embed)
-    print(
-        Fore.WHITE + "[" + Fore.MAGENTA + '+' + Fore.WHITE + "]" + Fore.MAGENTA + f"{ctx.author.name} executed command {conf_bot_prefix}{img_endpoint} result: {img}   time:{round(client.latency * 1000)}ms")
+    print(f"{ctx.author.name} executed command {conf_bot_prefix}{img_endpoint} result: {img}   time:{round(client.latency * 1000)}ms")
     
     """if not nsfw_enabled == True:
         return
@@ -2061,8 +2018,7 @@ async def socialfuncs(ctx,img_endpoint, action, member, arg=""):
     embed.set_image(url=img)
 
     await ctx.send(embed=embed)
-    print(
-        Fore.WHITE + "[" + Fore.MAGENTA + '+' + Fore.WHITE + "]" + Fore.MAGENTA + f"{ctx.author.name} executed command {conf_bot_prefix}{img_endpoint} result: {img}   time:{round(client.latency * 1000)}ms")
+    print(f"{ctx.author.name} executed command {conf_bot_prefix}{img_endpoint} result: {img}   time:{round(client.latency * 1000)}ms")
 
 
 # ============================     token     ============================
