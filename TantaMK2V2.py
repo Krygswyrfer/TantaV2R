@@ -53,7 +53,7 @@ async def on_message(message):
     await client.process_commands(message)
 
 
-# ==============================     generic commands     ==============================
+# ==============================     help command     ==============================
 
 
 @client.command()
@@ -471,6 +471,9 @@ async def help(ctx, specifier = None, page = None):  # Too lazy to implement a b
 
     await ctx.send(embed = embed)
     print(f"Command pull: tn? help {specifier} {page} requested by {user}.")
+    
+
+# ==============================     generic commands     ==============================
     
 
 @client.command()
