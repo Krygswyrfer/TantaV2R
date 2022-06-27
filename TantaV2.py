@@ -2,7 +2,9 @@
 
 # from asyncio.events import new_event_loop
 # from asyncio.windows_events import SelectorEventLoop
-from cgitb import text
+# from asyncio import streams
+# from cgitb import text
+from asyncio import streams
 from discord.utils import get
 import discord, asyncio, io, colorama, random
 from discord import FFmpegPCMAudio
@@ -21,7 +23,7 @@ from colorama import init
 import aiohttp
 import urllib.request,urllib.parse,urllib.error
 import shelve
-import tokkensafe
+import keykeeper
 import PrePrep
 
 
@@ -46,12 +48,15 @@ def check_queue(ctx, id):
 
 @client.event
 async def on_ready():
-    print("Tanta is operational. Have at it.")
-    #await client.change_presence(activity=discord.Game(name=random.choice(PrePrep.playingList)))
-    #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=random.choice(PrePrep.watchingList)))
-    #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=random.choice(PrePrep.listeningList)))
-    await client.change_presence(activity=discord.Streaming(name=random.choice(PrePrep.streamingList), url="https://www.twitch.tv/guavxx")) # "https://www.youtube.com/w
-
+    gameStat = random.choice(PrePrep.playingList)
+    watchStat = random.choice(PrePrep.watchingList)
+    listenStat = random.choice(PrePrep.listeningList)
+    streamStat = random.choice(PrePrep.streamingList)
+    #await client.change_presence(activity=discord.Game(name=gameStat))
+    #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=watchStat))
+    #await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=listenStat))
+    await client.change_presence(activity=discord.Streaming(name=streamStat, url="https://www.twitch.tv/guavxx")) # "https://www.youtube.com/w
+    print(f"Tanta is operational. Have at it.\nStatus message: {streamStat}")
 
 @client.event
 async def on_message(message):
@@ -654,6 +659,27 @@ async def findav(ctx, user: discord.Member = None):
         embed.set_footer(text=f"Pleasant evening, {str(ctx.message.author)}")
         await ctx.send(embed=embed)
 
+        
+@client.command()
+# async def findbn(ctx, user: discord.Member = None):
+#     if user is None:
+#         await ctx.send("Mention a user or specify their ID.")
+#     else:
+#         pfp = user.banner.url
+#         embed = discord.Embed(title = f"Retrieving avatar for {str(user)}", url = f"{pfp}", colour = PrePrep.colRan())
+#         embed.set_image(url = f"{pfp}")
+#         embed.set_footer(text=f"Pleasant evening, {str(ctx.message.author)}")
+#         await ctx.send(embed=embed)
+async def banner(ctx, user:discord.Member = None):
+    if user == None:
+        user = ctx.author
+    req = await client.http.request(discord.http.Route("GET", "/users/{uid}", uid=user.id))
+    banner_id = req["banner"]
+    # If statement because the user may not have a banner
+    if banner_id:
+        banner_url = f"https://cdn.discordapp.com/banners/{user.id}/{banner_id}?size=1024"
+        await ctx.send(f"{banner_url}")
+
 
 
 
@@ -725,13 +751,13 @@ async def trivt(ctx, id = None):
         message = await client.wait_for(event = "message", check = check, timeout = 14)
         if message.content == answer:
             await ctx.send(random.choice(rightList))
-            print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Correct. ")
+            print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Correct. ") # Logging purposes
         else:
             await ctx.send(f"{random.choice(wrongList)} The correct answer was `{ansformat}`.")
-            print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Incorrect. ")
+            print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Incorrect. ") # Logging purposes
     except asyncio.TimeoutError:
         await ctx.send(f"Hey {user}, {random.choice(afkList)} The answer was `{ansformat}`.")
-        print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Did not answer. ")
+        print(f"Command pull: tn? trivt requested by {ctx.message.author}. ID: {randomiser}. Did not answer. ") # Logging purposes
         return
 
 
@@ -895,45 +921,6 @@ async def likely(ctx, user: discord.Member = None, user1: discord.Member = None,
             await ctx.send("{} would be more likely to do that.".format(user1))
         elif factor == 1:
             await ctx.send("{} would be more likely to do that.".format(user))
-
-
-@client.command()
-async def rsstrivia(ctx):
-    var = [
-        'Shuhrat "Fuze" Kessikbayev was not born in Russia, but rather, Uzbekistan.',
-        'Maxim "Kapkan" Basuda\'s Entry Denial Devices are actually boxes of nails rigged with C4.',
-        'Lera "Finka" Melnikova\'s scar was received from a knife wound during a sparring match with fellow \
-Spetsnaz operator Maxim "Kapkan" Basuda.',
-        'The old model for Recruit can be found in Julien "Rook" Nizan\'s operator video.',
-        'Mark "Mute" R. Chandar is the youngest operator in Rainbow, at age 25.',
-        'Sam "Zero" Fisher is the oldest operator in Rainbow, at age 63.',
-        'Sam "Zero" Fisher uses Lera "Finka" Melnikova\'s nanobots to combat his arthritis.',
-        'Santiago "Flores" Lucero is Rainbow\'s first non-binary operator.',
-        'Vicente "Capitão" Souza, Lera "Finka" Melnikova, and Sam "Zero" Fisher are currently the only operators \
-in Rainbow with a physical disability.',
-        'When Jordan "Thermite" Trace\'s "Vintage Bureau" elite set is equipped, his Brimstone BC-3 Exothermic\
-        Charges are renamed to Texan Dynamite.',
-        'Mike "Thatcher" Baker once punched Olivier "Lion" Flament during a joint CTU training exercise for saying something wrong.',
-        'Tori "Gridlock" Tallyo Fairous has a BMI of 32.6, which is in the "Obese" range for females.',
-        'Saif "Oryx" Al Hadid and Jalal "Kaid" El Fassi are Rainbow\'s tallest operators, at 1.95m.',
-        'Nienke "Iana" Meijer is Rainbow\'s shortest operator, at 1.57m.',
-        'Azucena "Amaru" Rocío Quispe is Rainbow\'s tallest female operator, at 1.89m',
-        'Max "Mozzie" Goose is Rainbow\'s shortest male operator, at 1.62m.',
-        'Gustave "Doc" Kateb, Lera "Finka" Melnikova, and Mina "Thunderbird" Sky are currently the only operators \
-in Rainbow capable of healing fellow operators,'
-        ' restoring 40HP, 20HP, and 30HP respectively',
-        'Olivier "Lion" Flament\'s V308 assault rife and Lera "Finka" Melnikova\'s Spear .308 assault rifle are the \
-only weapons that do not have a functional real life counterpart.',
-        'The toxic gas used by the White Masks in their biochemical attack on Bartlett University is identical to the \
-gas released from James "Smoke" Porter\'s Compound Z8 Remote Gas Grenades.',
-        'The 417 designated marksman rifle used by Emmanuelle "Twitch" Pichon and Olivier "Lion" Flament has a damage rating of 69.',
-        'Jack "Pulse" Estrada has been badgering Masaru "Echo" Enatsu to teach him Japanese in order to impress Yumiko "Hibana" Imagawa.',
-        'Ubisoft\'s design team drew inspiration from Super Mario when coming up with Adrianello "Maestro" Martello\'s character appearance.',
-        'Shuhrat "Fuze" Kessikbayev\'s face can be viewed when the "Loose Ushanka" headgear is eqiupped.',
-    ]
-    trivia = random.choice(var)
-    embed = discord.Embed(title = "Random Rainbow Six Siege trivia", description = trivia, colour = PrePrep.colRan())
-    await ctx.send(embed = embed)
 
 
 @client.command()
@@ -1322,7 +1309,7 @@ async def morewaifu(ctx):
     async with aiohttp.ClientSession().get("https://api.waifu.pics/sfw/waifu") as response:
         waifus = (await response.json())["url"]
         user = ctx.message.author
-        embed = discord.Embed(title=f'Here\'s a waifu for you, {user}', image=f'{waifus}', colour=0x400180)
+        embed = discord.Embed(description=f'Here\'s a waifu for you, {user}', image=f'{waifus}', colour=0x400180)
         embed.set_image(url=waifus)
         await ctx.send(embed=embed)
 
@@ -1368,7 +1355,7 @@ async def randem(ctx):
     randomimg = requests.get(f"https://purrbot.site/api/img/sfw{formatter}")
     if randomimg.status_code == 200:
         img = (randomimg.json()["link"])
-        embed = discord.Embed(title = f"Enjoy a random image/gif (not jif), {user}", image = f"{img}", colour = PrePrep.colRan())
+        embed = discord.Embed(description = f"Enjoy a random image/gif (not jif), {user}", image = f"{img}", colour = PrePrep.colRan())
         embed.set_image(url = img)
         await ctx.send(embed = embed)
     else:
@@ -1381,7 +1368,7 @@ async def nekogif(ctx):
     nekoGif = requests.get("https://nekos.life/api/v2/img/ngif")
     if nekoGif.status_code == 200:
         gif = (nekoGif.json()["url"])
-        embed = discord.Embed(title = "Here, have a neko", image = f"{gif}", colour = PrePrep.colRan())
+        embed = discord.Embed(description = "Here, have a neko", image = f"{gif}", colour = PrePrep.colRan())
         embed.set_image(url = gif)
         await ctx.send(embed = embed)
     else:
@@ -2024,4 +2011,4 @@ async def socialfuncs(ctx,img_endpoint, action, member, arg=""):
 # ============================     token     ============================
 
 
-client.run(tokkensafe.token)
+client.run(keykeeper.token)
