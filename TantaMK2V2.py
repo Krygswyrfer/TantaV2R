@@ -58,7 +58,7 @@ async def on_message(message):
 
 @client.command()
 async def help(ctx, specifier = None, page = None):  # Too lazy to implement a better help menu at the moment
-    carbonMessage = "We do not hold exclusive rights to this command."
+    carbonMessage = "We do not hold any rights to this command."
     user = ctx.message.author
     if page is None:
         page = "1"
@@ -194,7 +194,7 @@ async def help(ctx, specifier = None, page = None):  # Too lazy to implement a b
         embed.set_footer(text = "Arguments in [square brackets] are optional. Arguments in <angular brackets> are required.")
 
     elif specifier.lower() == "help":
-        embed = discord.Embed(title = "tn? help", description = "Well no shit it shows the helpful help list what do you think?", colour = PrePrep.colRan())
+        embed = discord.Embed(title = "tn? help", description = "The help meta. Were you bored?", colour = PrePrep.colRan())
         embed.set_footer(text = "Arguments in [square brackets] are optional. Arguments in <angular brackets> are required.")
 
     elif specifier.lower() == "ping":
@@ -662,18 +662,15 @@ Statements, developers like {user.mention} are exempt from the roulette.')
 
 @client.command(pass_context=True)
 async def join(ctx):
-    if ctx.author.id not in PrePrep.cmdWhitelist:
-        await ctx.send("Nah, would rather not let you handle this command.")
+    if ctx.author.voice:
+        channel = ctx.message.author.voice.channel
+        voice = await channel.connect()
     else:
-        if ctx.author.voice:
-            channel = ctx.message.author.voice.channel
-            voice = await channel.connect()
-        else:
-            await ctx.send("Tanta can't join you if you're not in a VC, dummy.")
+        await ctx.send("Tanta can't join you if you're not in a VC, dummy.")
 
 
 @client.command()
-async def play(ctx, url):
+async def play(ctx, url): 
     try:
         if ctx.author.voice:
             channel = ctx.message.author.voice.channel
@@ -715,40 +712,31 @@ async def play(ctx, url):
 
 @client.command(pass_context=True)
 async def leave(ctx):
-    if ctx.author.id not in PrePrep.cmdWhitelist:
-        await ctx.send("Nah, would rather not let you handle this command.")
+    if (ctx.voice_client):
+        await ctx.guild.voice_client.disconnect()
+        if os.path.isfile('song.mp3'):
+            os.remove("song.mp3")
+        await ctx.message.delete()
     else:
-        if (ctx.voice_client):
-            await ctx.guild.voice_client.disconnect()
-            if os.path.isfile('song.mp3'):
-                os.remove("song.mp3")
-            await ctx.message.delete()
-        else:
-            await ctx.send("Tanta can't leave a VC she wasn't even in, doofus.")
+        await ctx.send("Tanta can't leave a VC she wasn't even in, doofus.")
 
 
 @client.command(pass_context=True)
 async def pause(ctx):
-    if ctx.author.id not in PrePrep.cmdWhitelist:
-        await ctx.send("Nah, would rather not let you handle this command.")
+    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    if voice.is_playing():
+        voice.pause()
     else:
-        voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-        if voice.is_playing():
-            voice.pause()
-        else:
-            await ctx.send("The what?")
+        await ctx.send("The what?")
 
 
 @client.command(pass_context=True)
 async def resume(ctx):
-    if ctx.author.id not in PrePrep.cmdWhitelist:
-        await ctx.send("Nah, would rather not let you handle this command.")
+    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    if voice.is_paused():
+        voice.resume()
     else:
-        voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
-        if voice.is_paused():
-            voice.resume()
-        else:
-            await ctx.send("The what?")
+        await ctx.send("The what?")
 
 
 @client.command(pass_context=True)
@@ -792,7 +780,7 @@ async def altplay(ctx):
 # ==============================     anime commands     ==============================
 
 
-@client.command(help = "More waifu if you're not satisfied")
+@client.command()
 async def morewaifu(ctx):
     await ctx.message.delete()
     async with aiohttp.ClientSession().get("https://api.waifu.pics/sfw/waifu") as response:
@@ -803,7 +791,7 @@ async def morewaifu(ctx):
         await ctx.send(embed=embed)
 
 
-@client.command(help = "Random Anime Quotes")
+@client.command()
 async def quotes(ctx):
     async with aiohttp.ClientSession().get("https://animechan.vercel.app/api/random") as response:
         anime = (await response.json())["anime"]
@@ -813,7 +801,7 @@ async def quotes(ctx):
         await ctx.send(embed=embed)
 
 
-@client.command(help = "Random contextually irrelevant images and gifs (not jifs)")
+@client.command()
 async def randem(ctx):
     var = ["/background/img",
     "/bite/gif",
@@ -852,7 +840,7 @@ async def randem(ctx):
     
 
 
-@client.command(help = "Self explanatory command")
+@client.command()
 async def nekogif(ctx):
     nekoGif = requests.get("https://nekos.life/api/v2/img/ngif")
     if nekoGif.status_code == 200:
@@ -864,7 +852,7 @@ async def nekogif(ctx):
         await ctx.send("An unexpected error has occured")
 
 
-@client.command(help = "More neko gifs if you're not satisfied")
+@client.command()
 async def morenekogif(ctx):
     nekopic = requests.get("https://purrbot.site/api/img/sfw/neko/gif")
     if nekopic.status_code == 200:
@@ -876,7 +864,7 @@ async def morenekogif(ctx):
         await ctx.send("An unexpected error has occured")
 
 
-@client.command(help = "More neko if you're not satisfied")
+@client.command()
 async def moreneko(ctx):
     nekopic = requests.get("https://neko-love.xyz/api/v1/neko")
     if ctx.author.id == 591074600411070502:
@@ -898,7 +886,7 @@ async def moreneko(ctx):
         await ctx.send(embed = embed)
 
 
-@client.command(help = "Self-explanatory command")
+@client.command()
 async def meowfact(ctx):
     async with aiohttp.ClientSession().get("https://catfact.ninja/fact") as response:
         fact = (await response.json())["fact"]
@@ -909,7 +897,7 @@ async def meowfact(ctx):
 
 
 # Returns a link to a random cat gif
-@client.command(help = "Self-explanatory command")
+@client.command()
 async def meowgif(ctx):
     catGif = requests.get('http://thecatapi.com/api/images/get?format=src&type=gif')
     if catGif.status_code == 200:
@@ -920,7 +908,7 @@ async def meowgif(ctx):
         await ctx.send('Error 404. Website may be down.')
 
 
-@client.command(help = "Self-explanatory command")
+@client.command()
 async def meowpic(ctx):
     catPicture = requests.get('http://thecatapi.com/api/images/get.php')
     if catPicture.status_code == 200:
@@ -933,7 +921,7 @@ async def meowpic(ctx):
         await ctx.send('Error 404. Website may be down.')
 
 
-@client.command(help = "Clown someone")
+@client.command()
 async def clown(ctx, user: discord.Member = None):
     if user is None:
         user = ctx.message.author
@@ -1075,7 +1063,8 @@ async def solo(ctx):
 
 @client.command()
 async def kemonomimi(ctx):
-    await imgfetchfuncs(ctx,"kemonomimi", "Awww, a catgirl", "")
+    await imgfetchfuncs(ctx,"kemonomimi", "", "")
+    
 
 @client.command()
 async def gasm(ctx, member: discord.Member, *, reason=""):
@@ -1284,14 +1273,14 @@ async def custom(ctx, user: discord.Member = None, *args):
         print("Custom DM sent.")
 
 
-@client.command(help = "Get to the NSFW chopper")
+@client.command()
 async def chopper(ctx):
     await ctx.send("**You hear that sound?**\n\n")
     await ctx.send("https://media.discordapp.net/attachments/680928395399266314/836674111932465202/image0.gif")
     await ctx.send("**\n\nGit to zer Choppa.**")
 
 
-@client.command(help = "A less efficient way to quote someone")
+@client.command()
 async def quote(ctx, user: discord.Member = None, *args):
     channel = client.get_channel(794600190626758716)
     if user is None:
